@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+@layer components {
+  .thead {
+    @apply py-3 px-4 text-left;
+  }
+
+  .tdata {
+    @apply py-3 px-4 border;
+  }
+}
