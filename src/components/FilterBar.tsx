@@ -1,45 +1,80 @@
 import { useState } from "react";
+import type { FilterOptions } from "../utils/filterUtils";
 
-export default function FilterBar() {
-  const [activeFilter, setActiveFilter] = useState("all");
+interface FilterBarProps {
+  onFiltersChange: (filters: FilterOptions) => void;
+  filterCounts?: {
+    all: number;
+    active: number;
+    completed: number;
+  };
+}
 
-  const filters = [
-    { key: "all", label: "All" },
-    { key: "active", label: "Active" },
-    { key: "completed", label: "Completed" },
+export default function FilterBar({
+  onFiltersChange,
+  filterCounts,
+}: FilterBarProps) {
+  const [filters, setFilters] = useState<FilterOptions>({
+    status: "all",
+    orderBy: "",
+    level: "",
+    institution: "",
+    interest: "",
+    date: "",
+  });
+
+  const statusFilters = [
+    { key: "all" as const, label: "All", count: filterCounts?.all },
+    { key: "active" as const, label: "Active", count: filterCounts?.active },
+    {
+      key: "completed" as const,
+      label: "Completed",
+      count: filterCounts?.completed,
+    },
   ];
 
+  const updateFilter = (key: keyof FilterOptions, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    onFiltersChange(newFilters);
+  };
+
   return (
-    <div className="flex flex-wrap items-center gap-3 mb-6">
-      {filters.map((filter) => (
+    <div className="flex flex-wrap items-center gap-3 mb-6 mx-auto justify-center">
+      {statusFilters.map((filter) => (
         <button
           key={filter.key}
-          onClick={() => setActiveFilter(filter.key)}
+          onClick={() => updateFilter("status", filter.key)}
           className={`px-4 py-2 rounded-full text-sm font-medium border transition ${
-            activeFilter === filter.key
+            filters.status === filter.key
               ? "bg-blue-950 text-white border-blue-950"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
           {filter.label}
+          {filter.count !== undefined && (
+            <span className="ml-1 text-xs opacity-75">({filter.count})</span>
+          )}
         </button>
       ))}
 
       <div className="relative">
         <select
           className="px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-900"
-          defaultValue=""
+          value={filters.orderBy}
+          onChange={(e) => updateFilter("orderBy", e.target.value)}
         >
           <option value="">Order By</option>
           <option value="createdAtDesc">Newest</option>
-          <option value="createdAtAsc">Oldest </option>
+          <option value="createdAtAsc">Oldest</option>
         </select>
       </div>
 
       <div className="relative">
         <select
           className="px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-900"
-          defaultValue=""
+          value={filters.level}
+          onChange={(e) => updateFilter("level", e.target.value)}
         >
           <option value="">Year/Level</option>
           <option value="100">Level 100</option>
@@ -52,7 +87,8 @@ export default function FilterBar() {
       <div className="relative">
         <select
           className="px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-900"
-          defaultValue=""
+          value={filters.institution}
+          onChange={(e) => updateFilter("institution", e.target.value)}
         >
           <option value="">Institution</option>
           <option value="Ghana Communication Technology University">
@@ -85,7 +121,8 @@ export default function FilterBar() {
       <div className="relative">
         <select
           className="px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-900"
-          defaultValue=""
+          value={filters.interest}
+          onChange={(e) => updateFilter("interest", e.target.value)}
         >
           <option value="">Interest</option>
           <option value="database">Database/Data science</option>
@@ -100,6 +137,9 @@ export default function FilterBar() {
         <input
           type="date"
           className="px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-900"
+          value={filters.date}
+          onChange={(e) => updateFilter("date", e.target.value)}
+          placeholder="Start date from..."
         />
       </div>
     </div>
