@@ -6,6 +6,7 @@ Modal.setAppElement("#root");
 interface ModalWindowProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  type: "intern" | "nss";
 }
 
 const customStyles = {
@@ -25,7 +26,7 @@ const customStyles = {
   },
 };
 
-const ModalWindow = ({ isOpen, setIsOpen }: ModalWindowProps) => {
+const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
   const closeModal = () => setIsOpen(false);
   return (
     <div className="relative">
@@ -37,7 +38,9 @@ const ModalWindow = ({ isOpen, setIsOpen }: ModalWindowProps) => {
           <MdClose />
         </button>
 
-        <h4 className="font-semibold text-2xl mb-3">Add New Intern Form</h4>
+        <h4 className="font-semibold text-2xl mb-3">
+          Add New {type === "intern" ? "Intern" : "NSS Personnel"} Form
+        </h4>
         <form className="flex flex-col gap-4">
           <div>
             <label htmlFor="fullName">Full Name</label>
@@ -52,17 +55,47 @@ const ModalWindow = ({ isOpen, setIsOpen }: ModalWindowProps) => {
           </div>
 
           <div className="flex items-center gap-20">
-            <div>
-              <label htmlFor="level">Level</label>
-              <div className="border border-gray-600 rounded-md">
-                <input
-                  id="level"
-                  className="bg-transparent outline-none p-2 w-full"
-                  type="number"
-                  placeholder="eg. 200"
-                />
+            {type === "intern" && (
+              <div>
+                <label htmlFor="level">Level</label>
+                <div className="border border-gray-600 rounded-md">
+                  <input
+                    id="level"
+                    className="bg-transparent outline-none p-2 w-full"
+                    type="number"
+                    placeholder="eg. 200"
+                  />
+                </div>
               </div>
-            </div>
+            )}
+
+            {type === "nss" && (
+              <>
+                <div>
+                  <label htmlFor="nssID">NSS ID</label>
+                  <div className="border border-gray-600 rounded-md">
+                    <input
+                      id="nssID"
+                      className="bg-transparent outline-none p-2 w-full"
+                      type="text"
+                      placeholder="eg. NSS123456"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <div className="border border-gray-600 rounded-md">
+                    <input
+                      id="email"
+                      className="bg-transparent outline-none p-2 w-full"
+                      type="email"
+                      placeholder="eg. john@example.com"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
 
             <div>
               <label htmlFor="telephone">Phone Number</label>
