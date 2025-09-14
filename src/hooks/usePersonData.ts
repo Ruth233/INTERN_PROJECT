@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useGenericContext, type PersonData } from "../contexts/GenericContext";
+import { isPersonActive } from "../utils/filterUtils";
 
 /**
  * Custom hook that provides convenient methods for managing person data (both intern and NSS)
@@ -48,13 +49,7 @@ export const usePersonData = () => {
   const getPersonsByStatus = useCallback(
     (status: "active" | "completed") => {
       return context.data.filter((person) => {
-        const currentDate = new Date();
-        const startDate = new Date(
-          person.startDate.split("/").reverse().join("-")
-        );
-        const endDate = new Date(person.endDate.split("/").reverse().join("-"));
-
-        const isActive = currentDate >= startDate && currentDate <= endDate;
+        const isActive = isPersonActive(person);
         return status === "active" ? isActive : !isActive;
       });
     },
