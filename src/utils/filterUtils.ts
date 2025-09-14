@@ -1,5 +1,4 @@
 import type { Intern } from "../Types/intern";
-import type { Nss } from "../Types/nss";
 
 // Note: These utilities primarily work with Intern type structure
 // The GenericContext handles conversion for NSS data to make it compatible
@@ -20,25 +19,23 @@ export interface FilterOptions {
 }
 
 // Helper function to parse date strings in DD/MM/YY format
-const parseDate = (dateString: string): Date => {
+export const parseDate = (dateString: string): Date => {
   const [day, month, year] = dateString.split("/");
   // Convert 2-digit year to 4-digit year (assuming 20xx)
   const fullYear = year.length === 2 ? `20${year}` : year;
   return new Date(`${fullYear}-${month}-${day}`);
 };
 
-// Helper function to determine if an intern is currently active
-const isInternActive = (intern: Intern): boolean => {
-  // Use explicit status if available
-  if (intern.status) {
-    return intern.status === "active";
-  }
-
-  // Otherwise calculate based on dates
+// Helper function to determine if a person is currently active based on dates
+export const isPersonActive = (person: {
+  startDate: string;
+  endDate: string;
+}): boolean => {
   const currentDate = new Date();
-  const startDate = parseDate(intern.startDate);
-  const endDate = parseDate(intern.endDate);
+  const startDate = parseDate(person.startDate);
+  const endDate = parseDate(person.endDate);
 
+  // Person is active if current date is between start and end dates (inclusive)
   return currentDate >= startDate && currentDate <= endDate;
 };
 
@@ -49,10 +46,10 @@ export const filterInterns = (
 ): Intern[] => {
   return interns.filter((intern) => {
     // Status filter
-    if (filters.status === "active" && !isInternActive(intern)) {
+    if (filters.status === "active" && !isPersonActive(intern)) {
       return false;
     }
-    if (filters.status === "completed" && isInternActive(intern)) {
+    if (filters.status === "completed" && isPersonActive(intern)) {
       return false;
     }
 
@@ -138,9 +135,11 @@ export const filterAndSortInterns = (
 };
 
 // Helper function to get filter counts for display
-export const getFilterCounts = (interns: Intern[]) => {
-  const total = interns.length;
-  const active = interns.filter(isInternActive).length;
+export const getFilterCounts = (
+  persons: { startDate: string; endDate: string }[]
+) => {
+  const total = persons.length;
+  const active = persons.filter(isPersonActive).length;
   const completed = total - active;
 
   return {
