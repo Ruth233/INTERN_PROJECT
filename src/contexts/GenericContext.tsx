@@ -10,21 +10,14 @@ import type { Nss } from "../Types/nss";
 import {
   filterAndSortInterns,
   getFilterCounts,
+  isPersonActive,
+  parseDate,
   type FilterOptions,
 } from "../utils/filterUtils";
 
 // Union type for data
 export type PersonData = Intern | Nss;
 export type PersonType = "intern" | "nss";
-
-// Type guards to check data type
-export const isIntern = (person: PersonData): person is Intern => {
-  return "level" in person;
-};
-
-export const isNss = (person: PersonData): person is Nss => {
-  return "nssID" in person && "email" in person;
-};
 
 interface GenericContextType {
   // Data management
@@ -81,43 +74,86 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
 
   // Memoized filtered and sorted data
   const filteredData = useMemo(() => {
-    // Convert PersonData to Intern for filtering (they have compatible structures)
-    const internCompatibleData = data.map((person) => {
-      if (isIntern(person)) {
-        return person;
-      } else {
-        // Convert NSS to Intern-compatible structure for filtering
-        return {
-          ...person,
-          level: 400, // Default level for NSS
-        } as Intern;
+    if (dataType === "intern") {
+      // For intern data, use the existing filter functions
+      const filtered = filterAndSortInterns(data as Intern[], filters);
+      return filtered;
+    } else {
+      // For NSS data, we need to filter manually since they don't have level field
+      let filtered = data.filter((person) => {
+        // Status filter
+        if (filters.status === "active" && !isPersonActive(person)) {
+          return false;
+        }
+        if (filters.status === "completed" && isPersonActive(person)) {
+          return false;
+        }
+
+        // Institution filter
+        if (filters.institution && person.institution !== filters.institution) {
+          return false;
+        }
+
+        // Interest filter
+        if (filters.interest) {
+          const interestMap: Record<string, string[]> = {
+            database: ["database", "data science", "data"],
+            "web-dev": ["web", "development", "frontend", "backend"],
+            networking: ["networking", "network"],
+            "cyber-security": ["cyber", "security"],
+            hardware: ["hardware"],
+          };
+
+          const searchTerms = interestMap[filters.interest] || [
+            filters.interest,
+          ];
+          const personInterest = person.interest.toLowerCase();
+
+          if (
+            !searchTerms.some((term) =>
+              personInterest.includes(term.toLowerCase())
+            )
+          ) {
+            return false;
+          }
+        }
+
+        // Date filter
+        if (filters.date) {
+          const filterDate = new Date(filters.date);
+          const personStartDate = parseDate(person.startDate);
+
+          if (personStartDate < filterDate) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      // Apply sorting for NSS data
+      if (filters.orderBy) {
+        filtered = [...filtered].sort((a, b) => {
+          const dateA = parseDate(a.startDate);
+          const dateB = parseDate(b.startDate);
+
+          if (filters.orderBy === "createdAtDesc") {
+            return dateB.getTime() - dateA.getTime();
+          } else if (filters.orderBy === "createdAtAsc") {
+            return dateA.getTime() - dateB.getTime();
+          }
+          return 0;
+        });
       }
-    });
 
-    const filtered = filterAndSortInterns(internCompatibleData, filters);
-
-    // Map back to original data structure
-    return filtered.map(
-      (filteredItem) =>
-        data.find((originalItem) => originalItem.id === filteredItem.id)!
-    );
-  }, [data, filters]);
+      return filtered;
+    }
+  }, [data, filters, dataType]);
 
   // Memoized filter counts for display
   const filterCounts = useMemo(() => {
-    // Convert to intern-compatible for counting
-    const internCompatibleData = data.map((person) => {
-      if (isIntern(person)) {
-        return person;
-      } else {
-        return {
-          ...person,
-          level: 400,
-        } as Intern;
-      }
-    });
-
-    return getFilterCounts(internCompatibleData);
+    // Use the data directly since getFilterCounts only needs startDate and endDate
+    return getFilterCounts(data);
   }, [data]);
 
   const handleFiltersChange = (newFilters: FilterOptions) => {
