@@ -1,5 +1,7 @@
 import { BiEdit } from "react-icons/bi";
-import { isIntern, isNss, type PersonData } from "../contexts/GenericContext";
+import type { PersonData } from "../contexts/GenericContext";
+import type { Intern } from "../Types/intern";
+import type { Nss } from "../Types/nss";
 
 interface TableProps {
   data: PersonData[];
@@ -30,13 +32,13 @@ const Table = ({ data, dataType }: TableProps) => {
             <tr key={item.id} className="hover:bg-gray-100 relative">
               <td className="tdata">{item.id}</td>
               <td className="tdata">{item.name}</td>
-              {dataType === "intern" && isIntern(item) && (
-                <td className="tdata">{item.level}</td>
+              {dataType === "intern" && (
+                <td className="tdata">{(item as Intern).level}</td>
               )}
-              {dataType === "nss" && isNss(item) && (
+              {dataType === "nss" && (
                 <>
-                  <td className="tdata">{item.nssID}</td>
-                  <td className="tdata">{item.email}</td>
+                  <td className="tdata">{(item as Nss).nssID}</td>
+                  <td className="tdata">{(item as Nss).email}</td>
                 </>
               )}
               <td className="tdata">{item.phone}</td>
