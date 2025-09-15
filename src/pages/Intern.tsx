@@ -12,6 +12,7 @@ const Intern = () => {
     filterCounts,
     isModalOpen,
     setIsModalOpen,
+    editingItem,
     dataType,
   } = useGenericContext();
   return (
@@ -32,6 +33,7 @@ const Intern = () => {
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
             type={dataType}
+            item={editingItem ?? undefined}
           />
           <Button setIsOpen={setIsModalOpen} />
         </div>
