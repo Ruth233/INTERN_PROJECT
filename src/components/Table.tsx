@@ -1,7 +1,7 @@
-import { BiEdit } from "react-icons/bi";
 import type { PersonData } from "../contexts/GenericContext";
 import type { Intern } from "../Types/intern";
 import type { Nss } from "../Types/nss";
+import EditButton from "./EditButton";
 
 interface TableProps {
   data: PersonData[];
@@ -25,6 +25,7 @@ const Table = ({ data, dataType }: TableProps) => {
             <th className="thead">Interest</th>
             <th className="thead">Start Date</th>
             <th className="thead">End Date</th>
+            <th className="thead">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -47,9 +48,9 @@ const Table = ({ data, dataType }: TableProps) => {
               <td className="tdata">{item.interest}</td>
               <td className="tdata">{item.startDate}</td>
               <td className="tdata">{item.endDate}</td>
-              <span className="absolute mt-3 ml-1 cursor-pointer hover:text-blue-500">
-                <BiEdit size={25} />
-              </span>
+              <td>
+                <EditButton item={item} />
+              </td>
             </tr>
           ))}
         </tbody>
