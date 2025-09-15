@@ -12,6 +12,7 @@ const NSS = () => {
     filterCounts,
     isModalOpen,
     setIsModalOpen,
+    editingItem,
     dataType,
   } = useGenericContext();
 
@@ -32,6 +33,7 @@ const NSS = () => {
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
             type={dataType}
+            item={editingItem ?? undefined}
           />
           <Button setIsOpen={setIsModalOpen} />
         </div>
