@@ -1,12 +1,15 @@
 import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
+import useModal from "../hooks/useModal";
+import { useGenericContext, type PersonData } from "../contexts/GenericContext";
 
 Modal.setAppElement("#root");
 
 interface ModalWindowProps {
-  isOpen: boolean;
+  isOpen?: boolean;
   setIsOpen: (isOpen: boolean) => void;
   type: "intern" | "nss";
+  item?: PersonData;
 }
 
 const customStyles = {
@@ -21,16 +24,49 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
   overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     backdropFilter: "blur(4px)",
   },
 };
 
-const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
-  const closeModal = () => setIsOpen(false);
+const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
+  const { setEditingItem } = useGenericContext();
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setEditingItem(null);
+  };
+
+  const {
+    fullName,
+    level,
+    nssID,
+    course,
+    email,
+    interest,
+    phoneNumber,
+    currentInstitution,
+    startDate,
+    endDate,
+    handleFullNameChange,
+    handleCourseChange,
+    handleCurrentInstitutionChange,
+    handleEmailChange,
+    handleEndDateChange,
+    handleInterestChange,
+    handleLevelChange,
+    handleNssIDChange,
+    handlePhoneNumberChange,
+    handleStartDateChange,
+  } = useModal(item, type);
+
   return (
     <div className="relative">
-      <Modal style={customStyles} isOpen={isOpen} contentLabel="Example Modal">
+      <Modal
+        style={customStyles}
+        isOpen={!!isOpen}
+        contentLabel="Example Modal"
+      >
         <button
           onClick={closeModal}
           className="font-bold text-2xl cursor-pointer hover:text-red-400 fixed top-2 right-3"
@@ -46,6 +82,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
             <label htmlFor="fullName">Full Name</label>
             <div className="border border-gray-600 rounded-md w-[50%]">
               <input
+                value={fullName}
+                onChange={handleFullNameChange}
                 id="fullName"
                 className="bg-transparent outline-none p-2 w-full"
                 type="text"
@@ -60,6 +98,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
                 <label htmlFor="level">Level</label>
                 <div className="border border-gray-600 rounded-md">
                   <input
+                    value={level}
+                    onChange={handleLevelChange}
                     id="level"
                     className="bg-transparent outline-none p-2 w-full"
                     type="number"
@@ -75,6 +115,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
                   <label htmlFor="nssID">NSS ID</label>
                   <div className="border border-gray-600 rounded-md">
                     <input
+                      value={nssID}
+                      onChange={handleNssIDChange}
                       id="nssID"
                       className="bg-transparent outline-none p-2 w-full"
                       type="text"
@@ -87,6 +129,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
                   <label htmlFor="email">Email</label>
                   <div className="border border-gray-600 rounded-md">
                     <input
+                      value={email}
+                      onChange={handleEmailChange}
                       id="email"
                       className="bg-transparent outline-none p-2 w-full"
                       type="email"
@@ -102,6 +146,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
               <div className="border border-gray-600 rounded-md">
                 <input
                   id="telephone"
+                  value={phoneNumber}
+                  onChange={handlePhoneNumberChange}
                   className="bg-transparent outline-none p-2 w-full"
                   type="tel"
                   placeholder="eg.05********"
@@ -116,6 +162,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
                   className="bg-transparent outline-none p-2 w-full"
                   list="universities"
                   id="university"
+                  value={currentInstitution}
+                  onChange={handleCurrentInstitutionChange}
                   name="university"
                   placeholder="Type your university..."
                 />
@@ -165,6 +213,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
             <div className="border border-gray-600 rounded-md w-[50%]">
               <input
                 id="course"
+                value={course}
+                onChange={handleCourseChange}
                 className="bg-transparent outline-none p-2 w-full"
                 type="text"
                 placeholder="eg. Computer Science"
@@ -177,6 +227,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
             <div className="border border-gray-600 rounded-md w-[50%]">
               <input
                 id="interest"
+                value={interest}
+                onChange={handleInterestChange}
                 className="bg-transparent outline-none p-2 w-full"
                 type="text"
                 placeholder="eg. Database"
@@ -190,6 +242,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
               <div className="border border-gray-600 rounded-md">
                 <input
                   id="start"
+                  value={startDate}
+                  onChange={handleStartDateChange}
                   className="bg-transparent outline-none p-2 w-full"
                   type="date"
                   placeholder="eg. 01/01/24"
@@ -202,6 +256,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type }: ModalWindowProps) => {
               <div className="border border-gray-600 rounded-md">
                 <input
                   id="end"
+                  value={endDate}
+                  onChange={handleEndDateChange}
                   className="bg-transparent outline-none p-2 w-full"
                   type="date"
                   placeholder="eg. 01/01/25"
