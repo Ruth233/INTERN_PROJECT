@@ -19,7 +19,7 @@ import {
 export type PersonData = Intern | Nss;
 export type PersonType = "intern" | "nss";
 
-interface GenericContextType {
+export interface GenericContextType {
   // Data management
   data: PersonData[];
   setData: (data: PersonData[]) => void;
@@ -41,6 +41,9 @@ interface GenericContextType {
   // Modal management (shared between pages)
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  editingItem: PersonData | null;
+  setEditingItem: (item: PersonData | null) => void;
+  openEditModal: (item: PersonData) => void;
 
   // Reset filters
   resetFilters: () => void;
@@ -71,6 +74,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   const [data, setData] = useState<PersonData[]>(initialData);
   const [filters, setFilters] = useState<FilterOptions>(defaultFilters);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<PersonData | null>(null);
 
   // Memoized filtered and sorted data
   const filteredData = useMemo(() => {
@@ -164,6 +168,11 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     setFilters(defaultFilters);
   };
 
+  const openEditModal = (item: PersonData) => {
+    setEditingItem(item);
+    setIsModalOpen(true);
+  };
+
   const value: GenericContextType = {
     data,
     setData,
@@ -175,6 +184,9 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     filterCounts,
     isModalOpen,
     setIsModalOpen,
+    editingItem,
+    setEditingItem,
+    openEditModal,
     resetFilters,
   };
 
