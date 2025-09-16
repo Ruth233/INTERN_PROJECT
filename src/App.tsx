@@ -1,10 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth";
-import Intern from "./pages/Intern";
-import NSS from "./pages/NSS";
+import SharedPage from "./pages/SharedPage";
 import AppLayout from "./components/AppLayout";
-import { GenericProvider } from "./contexts/GenericContext";
-import { internData, nssData } from "./data/internData";
+import { DynamicGenericProvider } from "./contexts/DynamicGenericProvider";
 
 const App = () => {
   return (
@@ -13,19 +11,14 @@ const App = () => {
         <Route path="/" element={<Auth />} />
         <Route path="/app" element={<AppLayout />}>
           <Route
-            path="/app/intern"
+            path="/app/*"
             element={
-              <GenericProvider initialData={internData} dataType="intern">
-                <Intern />
-              </GenericProvider>
-            }
-          />
-          <Route
-            path="/app/nss"
-            element={
-              <GenericProvider initialData={nssData} dataType="nss">
-                <NSS />
-              </GenericProvider>
+              <DynamicGenericProvider>
+                <Routes>
+                  <Route path="intern" element={<SharedPage />} />
+                  <Route path="nss" element={<SharedPage />} />
+                </Routes>
+              </DynamicGenericProvider>
             }
           />
         </Route>
