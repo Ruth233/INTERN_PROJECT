@@ -16,6 +16,7 @@ export interface FilterOptions {
     | "cyber-security"
     | "hardware";
   date: string;
+  searchTerm: string;
 }
 
 // Helper function to parse date strings in DD/MM/YY format
@@ -39,12 +40,36 @@ export const isPersonActive = (person: {
   return currentDate >= startDate && currentDate <= endDate;
 };
 
+// Helper function to perform regex search on person names
+export const searchByName = (
+  person: { name: string },
+  searchTerm: string
+): boolean => {
+  if (!searchTerm?.trim()) return true;
+
+  try {
+    // Create a case-insensitive regex from the search term
+    // Escape special regex characters and create a flexible pattern
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escapedTerm, "i");
+    return regex.test(person.name);
+  } catch {
+    // If regex creation fails, fall back to simple case-insensitive string matching
+    return person.name.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+};
+
 // Filter function
 export const filterInterns = (
   interns: Intern[],
   filters: FilterOptions
 ): Intern[] => {
   return interns.filter((intern) => {
+    // Search term filter - must be first to apply regex search
+    if (!searchByName(intern, filters.searchTerm)) {
+      return false;
+    }
+
     // Status filter
     if (filters.status === "active" && !isPersonActive(intern)) {
       return false;

@@ -12,6 +12,7 @@ import {
   getFilterCounts,
   isPersonActive,
   parseDate,
+  searchByName,
   type FilterOptions,
 } from "../utils/filterUtils";
 
@@ -58,6 +59,7 @@ const defaultFilters: FilterOptions = {
   institution: "",
   interest: "",
   date: "",
+  searchTerm: "",
 };
 
 interface GenericProviderProps {
@@ -85,6 +87,11 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     } else {
       // For NSS data, we need to filter manually since they don't have level field
       let filtered = data.filter((person) => {
+        // Search term filter - must be first to apply regex search
+        if (!searchByName(person, filters.searchTerm)) {
+          return false;
+        }
+
         // Status filter
         if (filters.status === "active" && !isPersonActive(person)) {
           return false;
@@ -196,6 +203,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
 };
 
 // Custom hook to use the GenericContext
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGenericContext = (): GenericContextType => {
   const context = useContext(GenericContext);
   if (context === undefined) {
@@ -204,5 +212,5 @@ export const useGenericContext = (): GenericContextType => {
   return context;
 };
 
-// Export the context for advanced use cases
-export { GenericContext };
+// Export the context for advanced use cases (commented out for fast refresh)
+// export { GenericContext };
