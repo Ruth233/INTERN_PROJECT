@@ -1,4 +1,4 @@
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { useGenericContext } from "../contexts/GenericContext";
 import { useState } from "react";
 
@@ -12,6 +12,14 @@ const Header = ({ title, summary }: { title: string; summary: string }) => {
     handleFiltersChange({
       ...filters,
       searchTerm: searchValue,
+    });
+  };
+
+  const handleClearSearch = () => {
+    setSearchValue("");
+    handleFiltersChange({
+      ...filters,
+      searchTerm: "",
     });
   };
 
@@ -30,6 +38,16 @@ const Header = ({ title, summary }: { title: string; summary: string }) => {
               onChange={(e) => setSearchValue(e.target.value)}
               className="outline-none bg-transparent py-1 text-sm"
             />
+            {searchValue && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="text-gray-500 hover:text-gray-700 transition-colors duration-200 p-1"
+                aria-label="Clear search"
+              >
+                <FaTimes size={12} />
+              </button>
+            )}
           </div>
         </form>
       </div>
