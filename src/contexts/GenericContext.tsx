@@ -3,6 +3,7 @@ import React, {
   useContext,
   useState,
   useMemo,
+  useEffect,
   type ReactNode,
 } from "react";
 import type { Intern } from "../Types/intern";
@@ -77,6 +78,11 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   const [filters, setFilters] = useState<FilterOptions>(defaultFilters);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<PersonData | null>(null);
+
+  // Keep data in sync with incoming initialData (e.g., after fetch completes)
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
 
   // Memoized filtered and sorted data
   const filteredData = useMemo(() => {
