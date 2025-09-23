@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { GenericProvider } from "./GenericContext";
-import { internData, nssData } from "../data/internData";
 import type { PersonType } from "./GenericContext";
+import { getInterns, getNss, login } from "../api";
 
 interface DynamicGenericProviderProps {
   children: React.ReactNode;
@@ -14,27 +14,48 @@ export const DynamicGenericProvider: React.FC<DynamicGenericProviderProps> = ({
   const location = useLocation();
 
   // Extract dataType from pathname
-  const { dataType, initialData } = useMemo(() => {
+  const { dataType } = useMemo(() => {
     const pathname = location.pathname;
 
     if (pathname.includes("/intern")) {
       return {
         dataType: "intern" as PersonType,
-        initialData: internData,
       };
     } else if (pathname.includes("/nss")) {
       return {
         dataType: "nss" as PersonType,
-        initialData: nssData,
       };
     }
 
     // Default fallback
     return {
       dataType: "intern" as PersonType,
-      initialData: internData,
     };
   }, [location.pathname]);
+
+  const [initialData, setInitialData] = useState<any[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        try {
+          await login("admin", "ChangeMe123!");
+        } catch (err) {
+          // ignore login error (might already be logged in)
+        }
+        const data =
+          dataType === "intern" ? await getInterns() : await getNss();
+        if (isMounted) setInitialData(data);
+      } catch (e) {
+        console.error(e);
+        if (isMounted) setInitialData([]);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [dataType, location.pathname]);
 
   return (
     <GenericProvider initialData={initialData} dataType={dataType}>
