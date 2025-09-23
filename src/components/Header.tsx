@@ -45,7 +45,7 @@ const Header = ({ title, summary }: { title: string; summary: string }) => {
                 className="text-gray-500 hover:text-gray-700 transition-colors duration-200 p-1"
                 aria-label="Clear search"
               >
-                <FaTimes size={12} />
+                <FaTimes size={15} />
               </button>
             )}
           </div>
