@@ -1,6 +1,14 @@
 import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
 import useModal from "../hooks/useModal";
+import {
+  createIntern,
+  updateIntern,
+  createNss,
+  updateNss,
+  getInterns,
+  getNss,
+} from "../api";
 import { useGenericContext, type PersonData } from "../contexts/GenericContext";
 
 Modal.setAppElement("#root");
@@ -30,7 +38,7 @@ const customStyles = {
 };
 
 const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
-  const { setEditingItem } = useGenericContext();
+  const { setEditingItem, setData, dataType } = useGenericContext();
 
   const closeModal = () => {
     setIsOpen(false);
@@ -60,6 +68,54 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
     handleStartDateChange,
   } = useModal(item, type);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (type === "intern") {
+        const payload = {
+          name: fullName,
+          level: Number(level),
+          phone: phoneNumber,
+          institution: currentInstitution,
+          course,
+          interest,
+          startDate,
+          endDate,
+        };
+        if (item?.id) {
+          await updateIntern(item.id, payload);
+        } else {
+          await createIntern(payload);
+        }
+      } else {
+        const payload = {
+          name: fullName,
+          phone: phoneNumber,
+          nssID,
+          email,
+          institution: currentInstitution,
+          course,
+          interest,
+          startDate,
+          endDate,
+        };
+        if (item?.id) {
+          await updateNss(item.id, payload);
+        } else {
+          await createNss(payload);
+        }
+      }
+      // Refresh data without reloading the page
+      const latest =
+        dataType === "intern" ? await getInterns() : await getNss();
+      setData(latest);
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit. Check console/logs.");
+    }
+  };
+
   return (
     <div className="relative">
       <Modal
@@ -77,7 +133,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
         <h4 className="font-semibold text-2xl mb-3">
           Add New {type === "intern" ? "Intern" : "NSS Personnel"} Form
         </h4>
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="fullName">Full Name</label>
             <div className="border border-gray-600 rounded-md w-[50%]">
