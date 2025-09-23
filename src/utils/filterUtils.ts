@@ -23,7 +23,7 @@ export interface FilterOptions {
 export const parseDate = (dateString: string): Date => {
   const [day, month, year] = dateString.split("/");
   // Convert 2-digit year to 4-digit year (assuming 20xx)
-  const fullYear = year.length === 2 ? `20${year}` : year;
+  const fullYear = year?.length === 2 ? `20${year}` : year;
   return new Date(`${fullYear}-${month}-${day}`);
 };
 
