@@ -1,22 +1,26 @@
 import { useState } from "react";
-import * as secret from "./../config/default";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { login } from "../api";
 
 const Auth = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [viewPassword, setViewPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleLogin(usernameInput: string, passwordInput: string) {
-    if (
-      usernameInput === secret.default.username &&
-      passwordInput === secret.default.password
-    ) {
-      navigate("/intern", { replace: true });
-    } else {
-      alert("Invalid credentials");
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await login(username, password);
+      navigate("/app/intern", { replace: true });
+    } catch (err) {
+      console.error(err);
+      alert("Invalid credentials or server unavailable");
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -28,7 +32,10 @@ const Auth = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <form className="flex items-center justify-center min-h-screen ">
+      <form
+        onSubmit={handleLogin}
+        className="flex items-center justify-center min-h-screen "
+      >
         <div className="p-15 border border-gray-300 bg-white w-[40%]  rounded-md shadow-md flex flex-col gap-6">
           <p className="text-center">Intern Management System</p>
           <p className="text-center font-bold text-lg">Sign In</p>
@@ -70,10 +77,11 @@ const Auth = () => {
           </div>
 
           <button
-            onClick={() => handleLogin(username, password)}
-            className="bg-blue-950 text-white px-2 py-3 rounded-md cursor-pointer"
+            type="submit"
+            disabled={loading}
+            className="bg-blue-950 text-white px-2 py-3 rounded-md cursor-pointer disabled:opacity-60"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </div>
       </form>
