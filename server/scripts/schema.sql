@@ -1,0 +1,49 @@
+CREATE DATABASE IF NOT EXISTS intern_mgmt
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE intern_mgmt;
+
+CREATE TABLE IF NOT EXISTS admin_users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(64) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS interns (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  level TINYINT UNSIGNED NOT NULL,
+  phone VARCHAR(50) NULL,
+  institution VARCHAR(150) NULL,
+  course VARCHAR(150) NULL,
+  interest VARCHAR(150) NULL,
+  start_date DATE NULL,
+  end_date DATE NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uq_intern_name_start UNIQUE KEY (name, start_date)
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_intern_name ON interns(name);
+CREATE INDEX idx_intern_institution ON interns(institution);
+
+CREATE TABLE IF NOT EXISTS nss (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  phone VARCHAR(50) NULL,
+  nss_id VARCHAR(50) NOT NULL,
+  email VARCHAR(191) NULL,
+  institution VARCHAR(150) NULL,
+  course VARCHAR(150) NULL,
+  interest VARCHAR(150) NULL,
+  start_date DATE NULL,
+  end_date DATE NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uq_nss_id UNIQUE KEY (nss_id)
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_nss_name ON nss(name);
+CREATE INDEX idx_nss_institution ON nss(institution);
+
+
