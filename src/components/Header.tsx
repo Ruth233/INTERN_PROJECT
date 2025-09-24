@@ -33,7 +33,7 @@ const Header = ({ title, summary }: { title: string; summary: string }) => {
             <FaSearch color="gray" />
             <input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name or institution..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className="outline-none bg-transparent py-1 text-sm"
