@@ -1,3 +1,4 @@
+import type { PersonData } from "../contexts/GenericContext";
 import type { Intern } from "../Types/intern";
 
 // Note: These utilities primarily work with Intern type structure
@@ -42,7 +43,7 @@ export const isPersonActive = (person: {
 
 // Helper function to perform regex search on person names
 export const searchByName = (
-  person: { name: string },
+  person: { name: string; institution?: string },
   searchTerm: string
 ): boolean => {
   if (!searchTerm?.trim()) return true;
@@ -52,10 +53,17 @@ export const searchByName = (
     // Escape special regex characters and create a flexible pattern
     const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escapedTerm, "i");
-    return regex.test(person.name);
+    return (
+      regex.test(person.name) ||
+      (!!person.institution && regex.test(person.institution))
+    );
   } catch {
     // If regex creation fails, fall back to simple case-insensitive string matching
-    return person.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const lower = searchTerm.toLowerCase();
+    return (
+      person.name.toLowerCase().includes(lower) ||
+      (!!person.institution && person.institution.toLowerCase().includes(lower))
+    );
   }
 };
 
@@ -173,3 +181,7 @@ export const getFilterCounts = (
     completed,
   };
 };
+
+export function getInstitutions(data: PersonData[]) {
+  return new Set(data.map((person) => person.institution));
+}
