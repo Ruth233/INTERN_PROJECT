@@ -21,6 +21,7 @@ export default function FilterBar({
     institution: "",
     interest: "",
     date: "",
+    searchTerm: "",
   });
 
   const statusFilters = [
