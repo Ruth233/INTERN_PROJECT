@@ -131,7 +131,8 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
         </button>
 
         <h4 className="font-semibold text-2xl mb-3">
-          Add New {type === "intern" ? "Intern" : "NSS Personnel"} Form
+          {item ? "Edit " : "Add New "}
+          {type === "intern" ? "Intern" : "NSS Personnel"} Form
         </h4>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
@@ -212,7 +213,9 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
             </div>
 
             <div>
-              <label htmlFor="university">Current Institution</label>
+              <label htmlFor="university">
+                {type === "nss" ? "Past" : "Current"} Institution
+              </label>
               <div className="border border-gray-600 rounded-md">
                 <input
                   className="bg-transparent outline-none p-2 w-full"
