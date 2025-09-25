@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../api";
+import { logout } from "../services/api";
 import { FiLogOut } from "react-icons/fi";
 
 export default function Navbar() {
