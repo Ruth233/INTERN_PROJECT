@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { GenericProvider } from "./GenericContext";
-import type { PersonType } from "./GenericContext";
-import { getInterns, getNss, login } from "../api";
+import type { PersonType, PersonData } from "./GenericContext";
+import { getInterns, getNss, login } from "../services/api";
 
 interface DynamicGenericProviderProps {
   children: React.ReactNode;
@@ -33,7 +33,7 @@ export const DynamicGenericProvider: React.FC<DynamicGenericProviderProps> = ({
     };
   }, [location.pathname]);
 
-  const [initialData, setInitialData] = useState<any[]>([]);
+  const [initialData, setInitialData] = useState<PersonData[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -41,7 +41,7 @@ export const DynamicGenericProvider: React.FC<DynamicGenericProviderProps> = ({
       try {
         try {
           await login("admin", "ChangeMe123!");
-        } catch (err) {
+        } catch {
           // ignore login error (might already be logged in)
         }
         const data =
