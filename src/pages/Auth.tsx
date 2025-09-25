@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { login } from "../api";
+import { login } from "../services/api";
 
 const Auth = () => {
   const [username, setUserName] = useState("");

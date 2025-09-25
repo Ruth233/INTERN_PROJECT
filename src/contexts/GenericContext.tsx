@@ -16,6 +16,7 @@ import {
   searchByName,
   type FilterOptions,
 } from "../utils/filterUtils";
+import { useLocation } from "react-router-dom";
 
 // Union type for data
 export type PersonData = Intern | Nss;
@@ -49,6 +50,8 @@ export interface GenericContextType {
 
   // Reset filters
   resetFilters: () => void;
+
+  isNssPage: boolean;
 }
 
 const GenericContext = createContext<GenericContextType | undefined>(undefined);
@@ -78,6 +81,8 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   const [filters, setFilters] = useState<FilterOptions>(defaultFilters);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<PersonData | null>(null);
+
+  const location = useLocation();
 
   // Keep data in sync with incoming initialData (e.g., after fetch completes)
   useEffect(() => {
@@ -186,6 +191,8 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     setIsModalOpen(true);
   };
 
+  const isNssPage = location.pathname.includes("/nss");
+
   const value: GenericContextType = {
     data,
     setData,
@@ -201,6 +208,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     setEditingItem,
     openEditModal,
     resetFilters,
+    isNssPage,
   };
 
   return (

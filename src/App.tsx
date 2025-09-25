@@ -4,7 +4,7 @@ import SharedPage from "./pages/SharedPage";
 import AppLayout from "./components/AppLayout";
 import { DynamicGenericProvider } from "./contexts/DynamicGenericProvider";
 import { useEffect, useState } from "react";
-import { checkAuth } from "./api";
+import { checkAuth } from "./services/api";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const [status, setStatus] = useState<"checking" | "authed" | "unauthed">(
