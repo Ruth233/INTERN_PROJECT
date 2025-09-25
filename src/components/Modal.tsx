@@ -8,7 +8,7 @@ import {
   updateNss,
   getInterns,
   getNss,
-} from "../api";
+} from "../services/api";
 import { useGenericContext, type PersonData } from "../contexts/GenericContext";
 
 Modal.setAppElement("#root");
