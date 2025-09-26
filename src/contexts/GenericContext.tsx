@@ -60,7 +60,6 @@ const defaultFilters: FilterOptions = {
   status: "all",
   orderBy: "",
   level: "",
-  institution: "",
   interest: "",
   date: "",
   searchTerm: "",
@@ -111,10 +110,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           return false;
         }
 
-        // Institution filter
-        if (filters.institution && person.institution !== filters.institution) {
-          return false;
-        }
+        // Removed institution filter
 
         // Interest filter
         if (filters.interest) {

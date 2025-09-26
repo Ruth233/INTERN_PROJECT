@@ -8,7 +8,6 @@ export interface FilterOptions {
   status: "all" | "active" | "completed";
   orderBy: "" | "createdAtDesc" | "createdAtAsc";
   level: "" | "100" | "200" | "300" | "400";
-  institution: string;
   interest:
     | ""
     | "database"
@@ -43,7 +42,7 @@ export const isPersonActive = (person: {
 
 // Helper function to perform regex search on person names
 export const searchByName = (
-  person: { name: string; institution?: string },
+  person: { name: string },
   searchTerm: string
 ): boolean => {
   if (!searchTerm?.trim()) return true;
@@ -53,17 +52,10 @@ export const searchByName = (
     // Escape special regex characters and create a flexible pattern
     const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escapedTerm, "i");
-    return (
-      regex.test(person.name) ||
-      (!!person.institution && regex.test(person.institution))
-    );
+    return regex.test(person.name);
   } catch {
     // If regex creation fails, fall back to simple case-insensitive string matching
-    const lower = searchTerm.toLowerCase();
-    return (
-      person.name.toLowerCase().includes(lower) ||
-      (!!person.institution && person.institution.toLowerCase().includes(lower))
-    );
+    return person.name.toLowerCase().includes(searchTerm.toLowerCase());
   }
 };
 
@@ -91,10 +83,7 @@ export const filterInterns = (
       return false;
     }
 
-    // Institution filter
-    if (filters.institution && intern.institution !== filters.institution) {
-      return false;
-    }
+    // Removed institution filter
 
     // Interest filter - match partial strings for flexibility
     if (filters.interest) {
@@ -182,6 +171,4 @@ export const getFilterCounts = (
   };
 };
 
-export function getInstitutions(data: PersonData[]) {
-  return new Set(data.map((person) => person.institution));
-}
+// Removed getInstitutions (institution filtering not used)
