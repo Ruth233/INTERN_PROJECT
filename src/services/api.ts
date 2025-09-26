@@ -32,6 +32,8 @@ export const updateIntern = (id: number, data: Partial<Intern>) =>
     method: "PUT",
     body: JSON.stringify(data),
   });
+export const deleteIntern = (id: number) =>
+  request<{ message: string }>(`/interns/${id}/delete`, { method: "POST" });
 
 // NSS
 export const getNss = () => request<Nss[]>("/nss");
@@ -45,6 +47,8 @@ export const updateNss = (id: number, data: Partial<Nss>) =>
     method: "PUT",
     body: JSON.stringify(data),
   });
+export const deleteNss = (id: number) =>
+  request<{ message: string }>(`/nss/${id}/delete`, { method: "POST" });
 
 // Auth (for later)
 export const login = (username: string, password: string) =>

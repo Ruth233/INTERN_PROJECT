@@ -6,7 +6,7 @@ body {
 
 @layer components {
   .thead {
-    @apply py-3 px-4 text-left;
+    @apply py-3 px-4;
   }
 
   .tdata {

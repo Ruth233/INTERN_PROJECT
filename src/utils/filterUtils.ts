@@ -1,4 +1,3 @@
-import type { PersonData } from "../contexts/GenericContext";
 import type { Intern } from "../Types/intern";
 
 // Note: These utilities primarily work with Intern type structure
@@ -37,7 +36,7 @@ export const isPersonActive = (person: {
   const endDate = parseDate(person.endDate);
 
   // Person is active if current date is between start and end dates (inclusive)
-  return currentDate >= startDate && currentDate <= endDate;
+  return currentDate >= startDate && currentDate < endDate;
 };
 
 // Helper function to perform regex search on person names
@@ -89,8 +88,6 @@ export const filterInterns = (
     if (filters.level && intern.level.toString() !== filters.level) {
       return false;
     }
-
-    // Removed institution filter
 
     // Interest filter - match partial strings for flexibility
     if (filters.interest) {

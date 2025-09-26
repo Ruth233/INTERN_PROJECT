@@ -10,6 +10,9 @@ import {
   getNss,
 } from "../services/api";
 import { useGenericContext, type PersonData } from "../contexts/GenericContext";
+import type { Intern } from "../Types/intern";
+import type { Nss } from "../Types/nss";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#root");
 
@@ -83,9 +86,26 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
           endDate,
         };
         if (item?.id) {
+          // No-change check for Intern
+          const original = item as Intern;
+          const noChange =
+            payload.name === original.name &&
+            payload.level === original.level &&
+            payload.phone === original.phone &&
+            payload.institution === original.institution &&
+            payload.course === original.course &&
+            payload.interest === original.interest &&
+            payload.startDate === original.startDate &&
+            payload.endDate === original.endDate;
+          if (noChange) {
+            toast("ℹ️ No changes made.");
+            return;
+          }
           await updateIntern(item.id, payload);
+          toast.success("Intern successfully updated!");
         } else {
           await createIntern(payload);
+          toast.success("Intern successfully added!");
         }
       } else {
         const payload = {
@@ -100,9 +120,27 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
           endDate,
         };
         if (item?.id) {
+          // No-change check for NSS
+          const original = item as Nss;
+          const noChange =
+            payload.name === original.name &&
+            payload.phone === original.phone &&
+            payload.nssID === original.nssID &&
+            payload.email === original.email &&
+            payload.institution === original.institution &&
+            payload.course === original.course &&
+            payload.interest === original.interest &&
+            payload.startDate === original.startDate &&
+            payload.endDate === original.endDate;
+          if (noChange) {
+            toast("No changes made.");
+            return;
+          }
           await updateNss(item.id, payload);
+          toast.success("NSP successfully updated!");
         } else {
           await createNss(payload);
+          toast.success("NSP successfully added!");
         }
       }
       // Refresh data without reloading the page

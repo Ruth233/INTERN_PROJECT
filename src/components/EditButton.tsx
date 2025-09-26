@@ -10,7 +10,7 @@ const EditButton = ({ item }: { item: PersonData }) => {
 
   return (
     <span
-      className="cursor-pointer hover:text-blue-500 flex items-center justify-center"
+      className="cursor-pointer text-blue-400 flex items-center justify-center"
       onClick={handleEditClick}
       title="Edit"
     >

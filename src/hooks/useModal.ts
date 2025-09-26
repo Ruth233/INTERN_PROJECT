@@ -51,9 +51,7 @@ export default function useModal(item?: PersonData, type?: "intern" | "nss") {
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
   };
-  const handleLevelChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLevel(e.target.value);
   };
   const handleNssIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {

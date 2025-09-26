@@ -5,8 +5,10 @@ import AppLayout from "./components/AppLayout";
 import { DynamicGenericProvider } from "./contexts/DynamicGenericProvider";
 import { useEffect, useState } from "react";
 import { checkAuth } from "./services/api";
+import { Toaster } from "react-hot-toast";
+import type { ReactNode } from "react";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const [status, setStatus] = useState<"checking" | "authed" | "unauthed">(
     "checking"
   );
@@ -57,6 +59,26 @@ const App = () => {
           />
         </Route>
       </Routes>
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: "10px" }}
+        toastOptions={{
+          success: {
+            duration: 3000,
+          },
+          error: {
+            duration: 1000,
+          },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "16px 24px",
+            backgroundColor: "#fff",
+            color: "#374151",
+          },
+        }}
+      />
     </BrowserRouter>
   );
 };
