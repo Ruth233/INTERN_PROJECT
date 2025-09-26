@@ -1,6 +1,7 @@
 import type { PersonData } from "../contexts/GenericContext";
 import type { Intern } from "../Types/intern";
 import type { Nss } from "../Types/nss";
+import DeleteButton from "./DeleteButton";
 import EditButton from "./EditButton";
 
 interface TableProps {
@@ -14,13 +15,12 @@ const Table = ({ data, dataType }: TableProps) => {
       <table className="border border-gray-400 mx-auto w-full bg-white rounded-lg shadow-md ">
         <thead>
           <tr className="bg-gray-200 text-center text-gray-600 uppercase text-sm">
-            <th className="thead">ID</th>
+            {dataType === "nss" && <th className="thead">NSS ID</th>}
             <th className="thead">Name</th>
             {dataType === "intern" && <th className="thead">Level</th>}
-            {dataType === "nss" && <th className="thead">NSS ID</th>}
-            {dataType === "nss" && <th className="thead">Email</th>}
             <th className="thead">Phone Number</th>
-            <th className="thead">Current school</th>
+            {dataType === "nss" && <th className="thead">Email</th>}
+            <th className="thead">Institution</th>
             <th className="thead">Course</th>
             <th className="thead">Interest</th>
             <th className="thead">Start Date</th>
@@ -31,7 +31,6 @@ const Table = ({ data, dataType }: TableProps) => {
         <tbody>
           {data.map((item) => (
             <tr key={item.id} className="hover:bg-gray-100 relative">
-              <td className="tdata">{item.id}</td>
               <td className="tdata">{item.name}</td>
               {dataType === "intern" && (
                 <td className="tdata">{(item as Intern).level}</td>
@@ -49,7 +48,10 @@ const Table = ({ data, dataType }: TableProps) => {
               <td className="tdata">{item.startDate}</td>
               <td className="tdata">{item.endDate}</td>
               <td>
-                <EditButton item={item} />
+                <div className="flex items-center gap-2 justify-center">
+                  <EditButton item={item} />
+                  <DeleteButton dataType={dataType} item={item} />
+                </div>
               </td>
             </tr>
           ))}
