@@ -139,6 +139,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
             <label htmlFor="fullName">Full Name</label>
             <div className="border border-gray-600 rounded-md w-[50%]">
               <input
+                required
                 value={fullName}
                 onChange={handleFullNameChange}
                 id="fullName"
@@ -154,14 +155,19 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
               <div>
                 <label htmlFor="level">Level</label>
                 <div className="border border-gray-600 rounded-md">
-                  <input
+                  <select
+                    id="level"
+                    required
                     value={level}
                     onChange={handleLevelChange}
-                    id="level"
                     className="bg-transparent outline-none p-2 w-full"
-                    type="number"
-                    placeholder="eg. 200"
-                  />
+                  >
+                    <option value="">Select level</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="300">300</option>
+                    <option value="400">400</option>
+                  </select>
                 </div>
               </div>
             )}
@@ -178,6 +184,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                       className="bg-transparent outline-none p-2 w-full"
                       type="text"
                       placeholder="eg. NSS123456"
+                      required
                     />
                   </div>
                 </div>
@@ -206,8 +213,11 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                   value={phoneNumber}
                   onChange={handlePhoneNumberChange}
                   className="bg-transparent outline-none p-2 w-full"
-                  type="tel"
+                  type="number"
                   placeholder="eg.05********"
+                  minLength={10}
+                  maxLength={10}
+                  required
                 />
               </div>
             </div>
@@ -225,6 +235,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                   onChange={handleCurrentInstitutionChange}
                   name="university"
                   placeholder="Type your university..."
+                  required
                 />
                 <datalist id="universities">
                   <option value="Ghana Communication Technology University">
@@ -277,6 +288,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                 className="bg-transparent outline-none p-2 w-full"
                 type="text"
                 placeholder="eg. Computer Science"
+                required
               />
             </div>
           </div>
@@ -291,6 +303,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                 className="bg-transparent outline-none p-2 w-full"
                 type="text"
                 placeholder="eg. Database"
+                required
               />
             </div>
           </div>
@@ -306,6 +319,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                   className="bg-transparent outline-none p-2 w-full"
                   type="date"
                   placeholder="eg. 01/01/24"
+                  required
                 />
               </div>
             </div>
@@ -320,6 +334,7 @@ const ModalWindow = ({ isOpen, setIsOpen, type, item }: ModalWindowProps) => {
                   className="bg-transparent outline-none p-2 w-full"
                   type="date"
                   placeholder="eg. 01/01/25"
+                  required
                 />
               </div>
             </div>
