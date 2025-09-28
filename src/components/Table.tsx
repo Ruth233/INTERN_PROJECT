@@ -15,11 +15,11 @@ const Table = ({ data, dataType }: TableProps) => {
       <table className="border border-gray-400 mx-auto w-full bg-white rounded-lg shadow-md ">
         <thead>
           <tr className="bg-gray-200 text-center text-gray-600 uppercase text-sm">
-            {dataType === "nss" && <th className="thead">NSS ID</th>}
             <th className="thead">Name</th>
+            {dataType === "nss" && <th className="thead">NSS ID</th>}
             {dataType === "intern" && <th className="thead">Level</th>}
-            <th className="thead">Phone Number</th>
             {dataType === "nss" && <th className="thead">Email</th>}
+            <th className="thead">Phone Number</th>
             <th className="thead">Institution</th>
             <th className="thead">Course</th>
             <th className="thead">Interest</th>
